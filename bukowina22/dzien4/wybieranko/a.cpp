@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+using namespace std;
+using pii = pair<int, int>;
+using ll = long long;
+#define FR first
+#define SD second
+#define PB push_back
+#define deb(...) logger(#__VA_ARGS__, __VA_ARGS__) // debugging 
+/*
+template <typename T> struct tag:reference_wrapper <T>{ using reference_wrapper <T>::reference_wrapper; };
+template <typename T1, typename T2> static inline tag <ostream> operator<<(tag <ostream> os, pair<T1, T2> const& p){ return os.get()<<"{"<<p.first<<", "<<p.second<<"}", os;}
+template <typename Other> static inline tag <ostream> operator<<(tag <ostream> os, Other const& o){ os.get()<<o; return os; }
+template <typename T> static inline tag <ostream> operator <<(tag <ostream> os, vector <T> const& v){ os.get()<<"["; for (int i=0; i<v.size(); i++) if (i!=v.size()-1) os.get()<<v[i]<<", "; else os.get()<<v[i]; return os.get()<<"]", os; }
+template <typename T> static inline tag <ostream> operator <<(tag <ostream> os, set <T> const& s){ vector <T> v; for (auto i: s) v.push_back(i); os.get()<<"["; for (int i=0; i<v.size(); i++) if (i!=v.size()-1) os.get()<<v[i]<<", "; else os.get()<<v[i]; return os.get()<<"]", os; }
+template <typename ...Args> void logger(string vars, Args&&... values) { cout<<"[ "<<vars<<" = "; string delim=""; (..., (cout<<delim<<values, delim=", ")); cout <<" ]\n"; }
+/**/
+
+constexpr int MxN = 1e6+6;
+ll wart[MxN];
+ll t[MxN];
+bool pierwsza[MxN];
+int lp[MxN];
+
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0), cout.tie(0);
+	
+	int n; cin >> n;
+	for (int i=1; i<=n; i++)
+		cin >> wart[i];
+
+	memset(pierwsza, 1, sizeof(pierwsza));
+	for (int i=2; i*i<=n; i++)
+		if (pierwsza[i])
+			for (int j=i*i; j<=n; j+=i)
+			{
+				pierwsza[j] = 0;
+				if (lp[j] == 0)
+					lp[j] = i;
+			}
+			
+	for (int i=2; i<=n; i++)
+	{
+		if (pierwsza[i]) lp[i] = i; 
+		if (i&1)
+		{
+			t[i-lp[i]+1] += wart[i];
+			t[min(n+1, i+lp[i])] -= wart[i];
+		}
+		else
+		{
+			t[i] += wart[i];
+			t[i+1] -= wart[i];
+		}
+	}
+	
+	ll suma = 0LL, ans = 0LL;
+	for (int i=1; i<=n; i++)
+	{
+		suma += t[i];
+		ans = max(ans, suma);
+	}
+	cout << ans + wart[1] << "\n";
+
+	return 0;
+}

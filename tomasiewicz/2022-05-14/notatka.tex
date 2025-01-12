@@ -1,0 +1,42 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{amsmath}
+
+\title{14.05.2022 Notatka}
+\author{Franek Pietrusiak}
+
+\begin{document}
+\maketitle
+
+\section{\href{https://codeforces.com/problemset/problem/463/D}{D. Gargari and Permutations}}
+\subsection{Problem}
+Mamy $k$, $k \in \langle 2, 5 \rangle$, permutacji $n$-elementowych, $n \in \langle 1, 1000 \rangle$. Musimy zwrócić \textbf{długość najdłuższego wspólnego podciągu} dla wszystkich $k$ permutacji.
+
+\subsection{Rozwiązanie}
+Możemy potraktować problem grafowo. Wierzchołkami będą wszystkie elementy od 1 do $n$. Dwa wierzchołki (nazwijmy je $v$ oraz $u$) będą połączone krawędzią skierowaną $v \to u$, gdy element $v$ jest "przed" elementem $u$ we wszystkich permutacjach.
+
+Teraz nasz problem sprowadza się do znalezienia \textbf{najdłuższej ścieżki w grafie}. W ogólności jest to trudne zadanie. Należy jednak zauważyć, że nasz graf nie posiada cykli oraz jest skierowany. Jest to więc \emph{skierowany graf acykliczny}. W przypadku tego rodzaju grafu przydatna staje się technika programowania dynamicznego. Niech $DP[v]$ oznacza najdłuższą ścieżkę kończącą się w wierzchołku $v$. Teraz wystarczy rozpatrywać wierzchołki w kolejności topologicznej i aktualizować ich wartość $DP$:
+$$DP[v] = M + 1$$, gdzie $M$ oznacza maksymalną wartość $DP$ z wszystkich wierzchołków, z których wychodzi krawędź do $v$. Gdy nie ma takich wierzchołków $M = 0$.
+
+Ostatecznie odpowiedzią do zadania będzie maksymalna wartość $DP$ z wszystkich wierzchołków. Złożoność: $O(n^2 k)$.
+
+\section{\href{https://codeforces.com/problemset/problem/1486/D}{D. Max Median}}
+\subsection{Problem}
+Mamy $n$ elementowy ciąg elementów oraz liczbę $k$. Musimy znaleźć takie $M$, które jest największą możliwą medianą w pewnym fragmencie tego ciągu. Długość fragmentu musi być równa co najmniej $k$.
+
+\subsection{Rozwiązanie}
+Odpowiedź możemy wyszukać binarnie. Potrzebujemy funkcji, która sprawdzi, czy istnieje taki fragment długości $\geq k$, którego mediana jest $\geq X$, gdzie $X$ będzie wartością na której wyszukujemy binarnie.
+\\ W naszej funkcji zaczniemy od nadania etykiety każdemu elementowi ciągu:
+$$
+\begin{cases}
+	1 & \text{jeśli element} \geq X \\
+	-1 & \text{w przeciwnym wypadku.}
+\end{cases}
+$$
+Okazuje się, że na tak skonstruowanym ciągu, każdy fragment, którego suma jest liczbą dodatnią posiada medianę $\geq X$. Teraz użyjemy sum i minimów prefiksowych do znalezienia dowolnego fragmentu, którego suma jest dodatnia, a długość nie mniejsza niż $k$. Będziemy dla każdego prefiksu $i$ znajdować minimalny prefiks $j$ z przedziału $[1,i-k]$. Jeśli ich różnica jest liczbą dodatnią to przerywamy działanie funkcji i zwracamy prawdę.
+\\ Ostatecznie odpowiedzią dla zadania będzie największa wartość $X$, dla której nasza funkcja zwraca prawdę. Złożoność: $O(n\log{}n)$
+
+\end{document}
